@@ -1,0 +1,119 @@
+﻿@model IEnumerable<TestJudicial123.Models.EstudiosJuridicos>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2></h2>
+<p>
+    Para agregar un nuevo Estudio Jurídico hacer click aquí:
+    @Html.ActionLink("Crear Nuevo", "Create")
+</p>
+<h2></h2>
+
+<table id="estudios" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Dirección
+            </th>
+            <th>
+                Telefono
+            </th>
+            <th>
+                Correo
+            </th>
+            <th>
+                Eliminar
+            </th>
+        </tr>
+    </thead>
+
+    <tbody></tbody>
+
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var español = {
+                "sProcessing": "Procesando...",
+                "sLengthMenu": "Mostrar _MENU_ registros",
+                "sZeroRecords": "No se encontraron resultados",
+                "sEmptyTable": "Ningún dato disponible en esta tabla",
+                "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix": "",
+                "sSearch": "Buscar:",
+                "sUrl": "",
+                "sInfoThousands": ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst": "Primero",
+                    "sLast": "Último",
+                    "sNext": "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                },
+                "buttons": {
+                    "copy": "Copiar",
+                    "colvis": "Visibilidad"
+                }
+            }
+            var table = $("#estudios").DataTable({
+                ajax: {
+                    url: "/api/EstudiosJuridicos",
+                    dataSrc: ""
+                },
+                "language": español,
+                columns: [
+                    {
+                        data: "Nombre",
+                        render: function (data, type, estudio) {
+                            return "<a href='/Estudios/edit/" + estudio.Id + "'>" + estudio.Nombre + "</a>";
+                        }
+                    },
+                    {
+                        data: "Direccion"
+                    },
+                    {
+                        data: "Telefono"
+                    },
+                    {
+                        data: "Correo"
+                    },
+                    {
+                        data: "Id",
+                        render: function (data) {
+                            return "<button class='btn-link js-delete' data-estudio-Id=" + data + ">Eliminar</button>";
+                        }
+                    }
+                ]
+            });
+            $("#estudios").on("click", ".js-delete", function () {
+                var button = $(this);
+                bootbox.confirm("Estás seguro de eliminar el siguiente Estudio Jurídico?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/api/EstudiosJuridicos/" + button.attr("data-estudio-Id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+
+    </script>
+}
