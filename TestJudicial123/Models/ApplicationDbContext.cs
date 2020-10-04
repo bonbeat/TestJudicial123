@@ -11,7 +11,7 @@ namespace TestJudicial123.Models
         public DbSet<EstudiosJuridicos> EstudiosJuridicos { get; set; }
         
 
-        public ApplicationDbContext() : base("DefaultConnection")
+        public ApplicationDbContext() : base("DefaultConnection") 
         {
         }
     }
